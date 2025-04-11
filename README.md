@@ -18,7 +18,7 @@ This is the final repository for the HackMol project, showcasing a collection of
 
 - This idea sprouts from making the process of a complaint resolution faster in public services. Currently the issues of a customer/ passenger can be lodged on different government handles but these take a lot of time in their resolution due to the fact that the respective authorities have to manually sort the importance of every complaint and then take further action. This leads to discontentment on the passenger's part and creates a negative experience for the passenger.
 
-- So we developed a sentiment analysis model based on Unsloth's open source LLM phi 3.5, we further fine tuned it and trained it to match our needs.
+- So we developed a sentiment analysis model based on Unsloth's open source LLM llama3.0, we further fine tuned it and trained it to match our needs.
  This model pre processes a issue that has been lodged using NLP, and the pre processed data is then fed into the model.
  The model then gives different sentiment scores to the issues based on which it categorizes the issues.
 
