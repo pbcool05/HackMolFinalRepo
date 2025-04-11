@@ -51,6 +51,11 @@ function Navbar() {
                 Complaint
               </Link>
             </li>
+            <li className="nav-item">
+              <Link to="/chatbot" className="nav-links" onClick={closeMobileMenu}>
+                Ask with AI
+              </Link>
+            </li>
 
             {/* Conditionally render based on authentication status */}
             {isAuthenticated && (
