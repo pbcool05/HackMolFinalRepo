@@ -21,10 +21,33 @@ function ComplaintForm() {
   };
 
   const handleFileChange = (e) => {
-    setComplaintInfo({
-      ...complaintInfo,
-      uploadedImage: e.target.files[0]
-    });
+    const file = e.target.files[0];
+    if (file) {
+      // Check file size (limit to 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        handleError('Image size must be less than 5MB');
+        e.target.value = ''; // Reset input
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        // Validate base64 string
+        if (base64String.length > 5 * 1024 * 1024) { // Also check base64 size
+          handleError('Encoded image is too large');
+          return;
+        }
+        setComplaintInfo({
+          ...complaintInfo,
+          uploadedImage: base64String
+        });
+      };
+      reader.onerror = () => {
+        handleError('Error reading file');
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -37,34 +60,33 @@ function ComplaintForm() {
     }
 
     try {
-      const formData = new FormData();
-      formData.append('typeOfComplaint', typeOfComplaint);
-      formData.append('description', description);
-      formData.append('trainNumber', trainNumber);
-      formData.append('ticketNumber', ticketNumber);
-      if (uploadedImage) {
-        formData.append('uploadedImage', uploadedImage);
-      }
-
       const response = await fetch('http://localhost:8080/auth/complaintform', {
-        method: 'PUT',
-        body: formData,
+        method: 'PUT', // Changed from PUT to POST
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          typeOfComplaint,
+          description,
+          trainNumber: parseInt(trainNumber), // Ensure number type
+          ticketNumber: parseInt(ticketNumber), // Ensure number type
+          uploadedImage,
+        }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
         handleSuccess('Complaint submitted successfully!');
-        // Refresh the page after successful submission
         setTimeout(() => {
           window.location.reload();
-        }, 1000); // Delay for a moment to ensure the success toast is visible
+        }, 1000);
       } else {
-        handleError(result.message || 'Failed to submit complaint.');
+        throw new Error(result.message || 'Failed to submit complaint');
       }
     } catch (err) {
-      console.log(err);
-      handleError('An error occurred while submitting the complaint.');
+      console.error('Submission error:', err);
+      handleError(err.message || 'An error occurred while submitting the complaint.');
     }
   };
 
