@@ -8,6 +8,7 @@ import ComplaintForm from './pages/ComplaintForm';
 import { useState } from 'react';
 import RefrshHandler from './RefrshHandler';
 import Navbar from './components/Navbar';
+import Chatbot from './pages/chatbot';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -25,6 +26,7 @@ function App() {
         <Route path='/signup' element={<Signup />} />
         <Route path='/home' element={<PrivateRoute element={<Home />} />} />
         <Route path='/complaintform' element={<ComplaintForm />} />
+        <Route path='/chatbot' element={<Chatbot/>} />
         <Route path='/result' element={<Result />} />
       </Routes>
     </div>
